@@ -130,6 +130,6 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
    5 rows in set (0.00 sec)
   ```
 ### See all data should remain same as Instance-1. For detail demostration visit below link:
-https://iamlinckon.hashnode.dev/google-cloud-vpc-network-peering
+https://iamlinckon.hashnode.dev/mysql-data-persistence-hosted-on-two-separate-ec2-intances-using-elastic-block-storage-ebs
 
 
