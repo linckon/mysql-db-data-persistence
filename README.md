@@ -1,5 +1,5 @@
 
-# MySQL data persistence hosted on two seperate EC2 intances using Elastic Block Storage (EBS)
+# MySQL data persistence hosted on two separate EC2 intances using Elastic Block Storage (EBS)
 
 This guide will help you set up a MySQL container using Docker Compose on an EC2 instance with an EBS volume and db data persistence.
 
