@@ -23,11 +23,15 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
 
 ### Setting Up on the First EC2 Instance
 
-- SSH into the first EC2 instance.
+- SSH into the first EC2 instance and run below command:
+   ```
+   sudo apt update
+   sudo apt install docker.io docker-compose -y
+   ```
 - Clone docker compose file and create a directory `data`
    ```
    git clone https://github.com/linckon/mysql-db-data-persistence.git
-   cd db-data-persistence
+   cd mysql-db-data-persistence
    mkdir data
    ```
 - Check if the disk is visible using:
@@ -44,7 +48,7 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
    ```
 - Mount the EBS volume to a directory, for example `/data`:
    ```
-   sudo mount /dev/xvdf /home/ubuntu/db-data-persistence/data
+   sudo mount /dev/xvdf /home/ubuntu/mysql-db-data-persistence/data
    ```
 - Navigate to the directory containing the `docker-compose.yml` file.
 - Run the Docker Compose command:
@@ -66,6 +70,20 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
    ('Bob Johnson', 40),
    ('Alice Brown', 35),
    ('Eva Davis', 28);
+
+
+
+   mysql> select * from person;
+   +----+-------------+------+
+   | id | name        | age  |
+   +----+-------------+------+
+   |  1 | John Doe    |   30 |
+   |  2 | Jane Smith  |   25 |
+   |  3 | Bob Johnson |   40 |
+   |  4 | Alice Brown |   35 |
+   |  5 | Eva Davis   |   28 |
+   +----+-------------+------+
+   5 rows in set (0.00 sec)
    ```
 
 ### Now mysql data persist into additional disk ,if the instance is corrupted we can simply detach the disk and attach it will another instance.
@@ -74,10 +92,20 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
 
 ### Setting Up on the Second EC2 Instance
 
-- SSH into the second EC2 instance.
+- SSH into the second EC2 instance and run below command:
+   ```
+   sudo apt update
+   sudo apt install docker.io docker-compose -y
+   ```
+- Clone docker compose file and create a directory `data`
+   ```
+   git clone https://github.com/linckon/mysql-db-data-persistence.git
+   cd mysql-db-data-persistence
+   mkdir data
+   ```
 - Mount the EBS volume:
    ```
-   sudo mount /dev/xvdf /data
+   sudo mount /dev/xvdf /home/ubuntu/mysql-db-data-persistence/data
    ```
 
 - Navigate to the directory containing the `docker-compose.yml` file.
@@ -88,6 +116,18 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
 - login to mysql inside docker container and run:
   ```
   select * from person;
+
+   mysql> select * from person;
+   +----+-------------+------+
+   | id | name        | age  |
+   +----+-------------+------+
+   |  1 | John Doe    |   30 |
+   |  2 | Jane Smith  |   25 |
+   |  3 | Bob Johnson |   40 |
+   |  4 | Alice Brown |   35 |
+   |  5 | Eva Davis   |   28 |
+   +----+-------------+------+
+   5 rows in set (0.00 sec)
   ```
 ### See all data should remain same as Instance-1. For detail demostration visit below link:
 https://iamlinckon.hashnode.dev/google-cloud-vpc-network-peering
