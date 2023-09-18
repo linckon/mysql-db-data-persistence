@@ -15,7 +15,7 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
    - Click Create.
 5. After the volume is created, select it, click on the Actions button, and then choose Attach Volume.
 6. In the Attach Volume dialog box:
-   - For Instance, start typing the name or ID of the instance, and then select Old-VM from the list.
+   - For Instance, start typing the name or ID of the instance, and then select Instance-1 from the list.
    - For Device, enter a device name. The name will depend on your instance type and the OS. For example, /dev/sdf (for instances launched using a classic block device mapping) or /dev/nvme1n1 (for Nitro-based instances).
    - Click Attach.
 
@@ -26,7 +26,8 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
 - SSH into the first EC2 instance.
 - Clone docker compose file and create a directory `data`
    ```
-   git clone 
+   git clone https://github.com/linckon/mysql-db-data-persistence.git
+   cd db-data-persistence
    mkdir data
    ```
 - Check if the disk is visible using:
@@ -43,16 +44,31 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
    ```
 - Mount the EBS volume to a directory, for example `/data`:
    ```
-   sudo mount /dev/xvdf /home/ubuntu/data
+   sudo mount /dev/xvdf /home/ubuntu/db-data-persistence/data
    ```
 - Navigate to the directory containing the `docker-compose.yml` file.
 - Run the Docker Compose command:
    ```
    docker-compose up -d
    ```
-- Login to mysql inside docker container and create a table called `person` inside database called `db` and insert some sample data
+- Login to mysql inside docker container and create a table called `person` inside database `db` and insert some sample data
+   ```
+   CREATE TABLE person (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    age INT
+   );
 
-### Now mysql data persist into additional disk ,if the instance is corrupted we can simply dettach the disk and attach it will another instance.
+
+   INSERT INTO person (name, age) VALUES
+   ('John Doe', 30),
+   ('Jane Smith', 25),
+   ('Bob Johnson', 40),
+   ('Alice Brown', 35),
+   ('Eva Davis', 28);
+   ```
+
+### Now mysql data persist into additional disk ,if the instance is corrupted we can simply detach the disk and attach it will another instance.
 
 - Detach the EBS volume from this instance and attach it to the second EC2 instance .
 
@@ -69,6 +85,11 @@ This guide will help you set up a MySQL container using Docker Compose on an EC2
    ```
    docker-compose up -d
    ```
-
+- login to mysql inside docker container and run:
+  ```
+  select * from person;
+  ```
+### See all data should remain same as Instance-1. For detail demostration visit below link:
+https://iamlinckon.hashnode.dev/google-cloud-vpc-network-peering
 
 
